@@ -45,56 +45,38 @@ train_data = create_train_data()
 
 
 convnet = input_data(shape=[None, IMG_SIZE, IMG_SIZE, 1], name='input')
-print(convnet.shape)
 
 convnet = conv_2d(convnet, 32, 3, activation='relu')
-print(convnet.shape)
 convnet = max_pool_2d(convnet, 2)
-print(convnet.shape)
 
 convnet = conv_2d(convnet, 64, 3, activation='relu')
-print(convnet.shape)
 convnet = max_pool_2d(convnet, 2)
-print(convnet.shape)
 
 convnet = conv_2d(convnet, 128, 3, activation='relu')
-print(convnet.shape)
 convnet = max_pool_2d(convnet, 2)
-print(convnet.shape)
 
 convnet = conv_2d(convnet, 256, 3, activation='relu')
-print(convnet.shape)
 convnet = max_pool_2d(convnet, 2)
-print(convnet.shape)
 
 convnet = conv_2d(convnet, 128, 3, activation='relu')
-print(convnet.shape)
 convnet = max_pool_2d(convnet, 2)
-print(convnet.shape)
 
 convnet = conv_2d(convnet, 64, 3, activation='relu')
-print(convnet.shape)
 convnet = max_pool_2d(convnet, 2)
-print(convnet.shape)
 
 convnet = conv_2d(convnet, 32, 3, activation='relu')
-print(convnet.shape)
 convnet = max_pool_2d(convnet, 2)
-print(convnet.shape)
 
 convnet = fully_connected(convnet, 512, activation='relu')
-print(convnet.shape)
-convnet = dropout(convnet, 0.75)
+convnet = dropout(convnet, 0.8)
 
 convnet = fully_connected(convnet, 2, activation='softmax')
-print(convnet.shape)
 convnet = regression(convnet, optimizer='adam', learning_rate=LR, loss='categorical_crossentropy', name='targets')
 
 model = tflearn.DNN(convnet, tensorboard_dir='logs/incr_epochs/5epochs', tensorboard_verbose=3)
 
 # Use 20% of the data for validation
 train_len = int(len(os.listdir(TRAIN_DIR)) * 0.8)
-print(train_len)
 train = train_data[:train_len]
 test = train_data[train_len:]
 

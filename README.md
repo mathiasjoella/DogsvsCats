@@ -7,3 +7,6 @@ Training data is present in the train directory.
 Testing data is present in the test directory.
 
 Run "python train.py" to train and test your model.
+
+Code from the following tutorial:
+https://pythonprogramming.net/convolutional-neural-network-kats-vs-dogs-machine-learning-tutorial/

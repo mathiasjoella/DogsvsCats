@@ -73,7 +73,7 @@ convnet = dropout(convnet, 0.8)
 convnet = fully_connected(convnet, 2, activation='softmax')
 convnet = regression(convnet, optimizer='adam', learning_rate=LR, loss='categorical_crossentropy', name='targets')
 
-model = tflearn.DNN(convnet, tensorboard_dir='logs/incr_epochs/5epochs', tensorboard_verbose=3)
+model = tflearn.DNN(convnet, tensorboard_dir='logs/incr_epochs/3epochs', tensorboard_verbose=3)
 
 # Use 20% of the data for validation
 train_len = int(len(os.listdir(TRAIN_DIR)) * 0.8)
@@ -96,27 +96,33 @@ model.save(MODEL_NAME)
 #testing data
 
 def process_test_data():
-	test_data = []
+	images = []
+	labels = []
 	for image in os.listdir(TEST_DIR):
 		path = os.path.join(TEST_DIR, image)
 		label = label_image(image)
 		image = cv2.imread(path, cv2.IMREAD_GRAYSCALE)
 		image = cv2.resize(image, (IMG_SIZE, IMG_SIZE))
-		test_data.append([np.array(image), label])
+		images.append(image)
+		labels.append(label)
+	return images, labels
 
-	shuffle(test_data)
-	np.save('test_data.npy', test_data)
-	return test_data
-
-test_data = process_test_data()
+test_images, test_labels = process_test_data()
+test_x = np.array(test_images)
+test_y = np.array(test_labels) 
+test_x = test_x.reshape(-1, IMG_SIZE, IMG_SIZE, 1)
+test_acc = model.evaluate(test_x, test_y)
+print('test accuracy: ', test_acc)
 
 fig = plt.figure()
 
-for num, data in enumerate(test_data):
-	img_data = data[0]
-	true_label = data[1]
+#for num, data in enumerate(test_data):
+for i in range(0, len(test_images)):
+	img_data = test_images[i]
+	true_label = test_labels[i]
+	img_data = np.array(img_data)
 
-	y = fig.add_subplot(5,4,num+1)
+	y = fig.add_subplot(5,4,i+1)
 	orig = img_data
 	data = img_data.reshape(IMG_SIZE, IMG_SIZE, 1)
 	model_out = model.predict([data])[0]
